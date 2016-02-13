@@ -1,0 +1,31 @@
+﻿.big {
+    font-size: 30px;
+}
+
+.small {
+    font-size: 15px;
+}
+
+.red {
+    background-color: red;
+}
+
+.green {
+    background-color: green;
+}
+
+.ng-hiding {
+    color: deeppink;
+}
+
+.ng-hidden {
+    color: lightpink;
+}
+
+.ng-showing {
+    color: lightblue;
+}
+
+.ng-shown {
+    color: blue;
+}
