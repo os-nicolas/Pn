@@ -1,4 +1,4 @@
-﻿.big {
+﻿/*.big {
     font-size: 30px;
 }
 
@@ -28,4 +28,57 @@
 
 .ng-shown {
     color: blue;
+}*/
+
+/*.pn-if {
+background-color:yellow;
+}*/
+
+/*div.pn-if.pn-shown ,p.pn-if.pn-shown {
+    animation-name: enter;
+    animation-timing-function:cubic-bezier(1,0,1,0);
+    animation-duration: .75s;
 }
+
+div.pn-if.pn-shown ,p.pn-if.pn-shown {
+    animation-name: exit;
+    animation-duration: .75s;
+    animation-delay: 1s;
+    animation-timing-function:cubic-bezier(0,1,0,1);
+    animation-fill-mode:forwards;
+}
+
+.pn-if {
+    display:inline-block;
+}*/
+
+/*.holder {
+    border: 1px grey solid;
+}*/
+
+/*@keyframes enter {
+    0%   {
+        max-height:0;
+        max-width:0;
+        opacity:0;
+    }
+    100% {
+        max-width:1000px;
+        max-height:1000px;
+        opacity:1;
+    }
+}*/
+
+
+/*@keyframes exit {
+     0% {
+        max-width:1000px;
+        max-height:1000px;
+        opacity:1;
+    }
+    100%   {
+        max-height:0;
+        max-width:0;
+        opacity:0;
+    }
+}*/

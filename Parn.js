@@ -30,15 +30,27 @@ $(document).ready(function () {
     // this is our logger
     var lumberJack = function (str, obj) {
         if (DEBUG) {
-            console.log(str, obj);
+            if (obj === undefined) {
+                console.log(str);
+
+            } else {
+                console.log(str, obj);
+            }
         }
     }
 
     var classes = {
         HIDDEN: "pn-hidden",
-        SHOWN: "pn-shown",
-        //HIDING: "pn-hiding",
-        //SHOWING: "pn-showing"
+        SHOWN: "pn-shown"
+    }
+
+    var uiHasStatusClass = function (uie) {
+        for (var key in classes) {
+            if (uie.hasClass(classes[key])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     var ops = { OR: "or", AND: "and", XOR: "xor" };
@@ -183,9 +195,23 @@ $(document).ready(function () {
         }
     }
 
+    var growText = function (uie) {
+        var currentLength = uie.text().length;
+        var targetString = uie.data("pn-text");
+        if (targetString === undefined) {
+            console.error("pn-text is not defined", uie)
+        }
+        if (currentLength !== targetString.length) {
+            var currentText = targetString.slice(0, currentLength + 1);
+            uie.text(currentText);
+            setTimeout(function () { growText(uie) }, 10);
+        }
+    }
+
 
     var showPnIf = function (uie) {
-        if (!uie.hasClass(classes.SHOWN)) {//(!uie.hasClass(classes.SHOWING)) && (
+        // TODO special case  for first pass
+        var applyPublicClasses = function (uie) {
             if (uie.data("pn-if-class")) {
                 lumberJack("adding class: " + uie.data("pn-if-class"));
                 uie.addClass(uie.data("pn-if-class"));
@@ -193,22 +219,57 @@ $(document).ready(function () {
             if (uie.data("pn-else-class")) {
                 lumberJack("removing class: " + uie.data("pn-else-class"));
                 uie.removeClass(uie.data("pn-else-class"));
-            } else {
-                uie.show();
             }
+        }
+
+        if (!uiHasStatusClass(uie)) {
+            if (uie.css("display") === "inline") {
+                var currentText = uie.text();
+                uie.data("pn-text", currentText);
+                uie.text("");
+            } else {
+                // we assume we are already showing
+            }
+
+            applyPublicClasses(uie);
+            uie.addClass(classes.SHOWN);
+        } else if (!uie.hasClass(classes.SHOWN)) {//(!uie.hasClass(classes.SHOWING)) && (
+            if (uie.css("display") === "inline") {
+                growText(uie);
+            } else {
+                uie.animate({
+                    width: "show",
+                    height: "show"
+                }, HIDE_TIME / 2);
+                uie.animate({
+                    opacity: "1"
+                }, HIDE_TIME / 2);
+            }
+            applyPublicClasses(uie);
+
             clearStateClasses(uie);
             uie.addClass(classes.SHOWN);
-            //setTimeout(function () {
-            //    if (uie.hasClass(classes.SHOWING)) {
-            //        clearStateClasses(uie);
-            //        uie.addClass(classes.SHOWN);
-            //    }
-            //}, HIDE_TIME);
+        } else {
+            // we are already shown
+        }
+    }
+
+    var removeText = function (uie) {
+        // TODO special case  for first pass
+
+        var currentText = uie.text();
+        if (uie.data("pn-text") === undefined) {
+            uie.data("pn-text", currentText);
+        }
+        if (currentText.length !== 0) {
+            currentText = currentText.slice(0, -1);
+            uie.text(currentText);
+            setTimeout(function () { removeText(uie) }, 10);
         }
     }
 
     var hidePnIf = function (uie) {
-        if (!uie.hasClass(classes.HIDDEN)) {//(!uie.hasClass(classes.HIDING)) && (
+        var applyPublicClasses = function (uie) {
             if (uie.data("pn-if-class")) {
                 lumberJack("removing class: " + uie.data("pn-if-class"));
                 uie.removeClass(uie.data("pn-if-class"));
@@ -216,17 +277,42 @@ $(document).ready(function () {
             if (uie.data("pn-else-class")) {
                 lumberJack("adding class: " + uie.data("pn-else-class"));
                 uie.addClass(uie.data("pn-else-class"));
+            }
+        }
+
+        if (!uiHasStatusClass(uie)) {
+            if (uie.css("display") === "inline") {
+                var currentText = uie.text();
+                uie.data("pn-text", currentText);
+                uie.text("");
             } else {
                 uie.hide();
             }
+
+            applyPublicClasses(uie);
+            uie.addClass(classes.HIDDEN);
+        } else if (!uie.hasClass(classes.HIDDEN)) {//(!uie.hasClass(classes.HIDING)) && (
+            // we need to think about how to hide you nicely.
+            // this means we need to select on display type
+            // man should we do this automatically?
+            if (uie.css("display") === "inline") {
+                removeText(uie);
+            } else {
+                uie.animate({
+                    opacity: "0"
+                }, HIDE_TIME / 2);
+                uie.animate({
+                    width: "hide",
+                    height: "hide"
+                }, HIDE_TIME / 2);
+            }
+
+            applyPublicClasses(uie);
+
             clearStateClasses(uie);
-            uie.addClass(classes.HIDING);
-            //setTimeout(function () {
-            //    if (uie.hasClass(classes.HIDING)) {
-            //        clearStateClasses(uie);
-            //        uie.addClass(classes.HIDDEN);
-            //    }
-            //}, HIDE_TIME);
+            uie.addClass(classes.HIDDEN);
+        } else {
+            // we are already hiding do nothing
         }
     }
 
@@ -318,7 +404,6 @@ $(document).ready(function () {
     }
 
     updateAll();
-
 
     // when any of our buttons are clicked
     // we need to update all the .parn-content
