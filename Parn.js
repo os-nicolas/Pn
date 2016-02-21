@@ -196,15 +196,17 @@ $(document).ready(function () {
     }
 
     var growText = function (uie) {
-        var currentLength = uie.text().length;
-        var targetString = uie.data("pn-text");
-        if (targetString === undefined) {
-            console.error("pn-text is not defined", uie)
-        }
-        if (currentLength !== targetString.length) {
-            var currentText = targetString.slice(0, currentLength + 1);
-            uie.text(currentText);
-            setTimeout(function () { growText(uie) }, 10);
+        if (uie.hasClass(classes.SHOWN)){
+            var currentLength = uie.text().length;
+            var targetString = uie.data("pn-text");
+            if (targetString === undefined) {
+                console.error("pn-text is not defined", uie)
+            }
+            if (currentLength !== targetString.length) {
+                var currentText = targetString.slice(0, currentLength + 1);
+                uie.text(currentText);
+                setTimeout(function () { growText(uie) }, 10);
+            }
         }
     }
 
@@ -223,17 +225,25 @@ $(document).ready(function () {
         }
 
         if (!uiHasStatusClass(uie)) {
+            applyPublicClasses(uie);
+            uie.addClass(classes.SHOWN);
+
             if (uie.css("display") === "inline") {
                 var currentText = uie.text();
                 uie.data("pn-text", currentText);
-                uie.text("");
+                //uie.text("");
             } else {
                 // we assume we are already showing
             }
 
-            applyPublicClasses(uie);
-            uie.addClass(classes.SHOWN);
+
         } else if (!uie.hasClass(classes.SHOWN)) {//(!uie.hasClass(classes.SHOWING)) && (
+
+            applyPublicClasses(uie);
+
+            clearStateClasses(uie);
+            uie.addClass(classes.SHOWN);
+
             if (uie.css("display") === "inline") {
                 growText(uie);
             } else {
@@ -245,10 +255,6 @@ $(document).ready(function () {
                     opacity: "1"
                 }, HIDE_TIME / 2);
             }
-            applyPublicClasses(uie);
-
-            clearStateClasses(uie);
-            uie.addClass(classes.SHOWN);
         } else {
             // we are already shown
         }
@@ -256,15 +262,16 @@ $(document).ready(function () {
 
     var removeText = function (uie) {
         // TODO special case  for first pass
-
-        var currentText = uie.text();
-        if (uie.data("pn-text") === undefined) {
-            uie.data("pn-text", currentText);
-        }
-        if (currentText.length !== 0) {
-            currentText = currentText.slice(0, -1);
-            uie.text(currentText);
-            setTimeout(function () { removeText(uie) }, 10);
+        if (uie.hasClass(classes.HIDDEN)){
+            var currentText = uie.text();
+            if (uie.data("pn-text") === undefined) {
+                uie.data("pn-text", currentText);
+            }
+            if (currentText.length !== 0) {
+                currentText = currentText.slice(0, -1);
+                uie.text(currentText);
+                setTimeout(function () { removeText(uie) }, 10);
+            }
         }
     }
 
@@ -281,6 +288,9 @@ $(document).ready(function () {
         }
 
         if (!uiHasStatusClass(uie)) {
+            applyPublicClasses(uie);
+            uie.addClass(classes.HIDDEN);
+
             if (uie.css("display") === "inline") {
                 var currentText = uie.text();
                 uie.data("pn-text", currentText);
@@ -288,13 +298,18 @@ $(document).ready(function () {
             } else {
                 uie.hide();
             }
-
-            applyPublicClasses(uie);
-            uie.addClass(classes.HIDDEN);
         } else if (!uie.hasClass(classes.HIDDEN)) {//(!uie.hasClass(classes.HIDING)) && (
             // we need to think about how to hide you nicely.
             // this means we need to select on display type
             // man should we do this automatically?
+
+
+            applyPublicClasses(uie);
+
+            clearStateClasses(uie);
+            uie.addClass(classes.HIDDEN);
+
+
             if (uie.css("display") === "inline") {
                 removeText(uie);
             } else {
@@ -306,11 +321,6 @@ $(document).ready(function () {
                     height: "hide"
                 }, HIDE_TIME / 2);
             }
-
-            applyPublicClasses(uie);
-
-            clearStateClasses(uie);
-            uie.addClass(classes.HIDDEN);
         } else {
             // we are already hiding do nothing
         }
