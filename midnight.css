@@ -1,4 +1,32 @@
-﻿/*.big {
+﻿.pn-id {
+    transition: background-color .2s ease, border-color .2s ease;
+}
+
+.pn-id {
+        border-radius:.15em;
+}
+
+.pn-id.pn-off {
+    border-bottom: .15em #a52020 solid;
+
+}
+.pn-id.pn-on {
+    border-bottom: .15em black solid;
+}
+
+.pn-id:hover {
+
+    background-color:#a52020;
+}
+
+.pn-id:active {
+    background-color:#a52020;
+}
+
+
+
+
+/*.big {
     font-size: 30px;
 }
 

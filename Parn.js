@@ -1,26 +1,31 @@
 ﻿// TODO some way to programatically swap pn-on and call the event
+// store the on off in the css class? or in data? where is the right place?
 
 // TODO gen css classes
 // pn-error
 // pn-if
 // pn-id
 
-// pn-hiding  -- added with a timeout - i think we are just going to get rid of this less is more sometimes
-// pn-showing  -- added with a timeout - i think we are just going to get rid of this less is more sometimes
+// pn-on
+// pn-off
 // pn-hidden
 // pn-shown
 // check for invalid ids 
 
-// data-pn-id 
-// data-pn-on
-// data-pn-on-text
-// data-pn-off-text
-// data-pn-on-class
-// data-pn-off-class
-// data-pn-if
-// data-pn-if-class
-// data-pn-else-class
+//  data-pn-id 
+//  data-pn-start-on
+//      defaults to false
+//  data-pn-on-text
+//  data-pn-off-text
+//  data-pn-if
 
+// I think i am going to remove these
+// keep it slim right?
+// we are generating classes for all of these things:
+//  data-pn-if-class
+//  data-pn-else-class
+//  data-pn-on-class
+//  data-pn-off-class
 
 $(document).ready(function () {
     var dataIds = {};
@@ -76,7 +81,7 @@ $(document).ready(function () {
             if (currentOperation === NONE) {
                 throw { message: "operation expected" };
             }
-            lumberJack("start operate: flipnext=" + flipNext + " currentOperation=" + currentOperation + " boolean=" + boolean + " currentValue=" + currentValue);
+            //lumberJack("start operate: flipnext=" + flipNext + " currentOperation=" + currentOperation + " boolean=" + boolean + " currentValue=" + currentValue);
             if (flipNext) {
                 flipNext = false;
                 boolean = !boolean;
@@ -93,7 +98,7 @@ $(document).ready(function () {
                 throw { message: "unexpected operation:" + currentOperation };
             }
             currentOperation = NONE;
-            lumberJack("end operate: flipnext=" + flipNext + " currentOperation=" + currentOperation + " boolean=" + boolean + " currentValue=" + currentValue);
+            //lumberJack("end operate: flipnext=" + flipNext + " currentOperation=" + currentOperation + " boolean=" + boolean + " currentValue=" + currentValue);
         }
 
         // I want to get ride of this and have the 
@@ -112,7 +117,7 @@ $(document).ready(function () {
         }
 
         var setOperation = function (newOp) {
-            lumberJack("setOp: " + newOp);
+            //lumberJack("setOp: " + newOp);
             if (currentOperation !== NONE) {
                 throw { message: "can not set operation to:" + newOp + " it is already set to: " + currentOperation };
             }
@@ -138,7 +143,7 @@ $(document).ready(function () {
                     list.splice(0, 1);
                 }
                 if (depth === 0) {
-                    lumberJack("inner: ", inner);
+                    //lumberJack("inner: ", inner);
                     operate(evaulateExpression(inner));
                 } else {
                     throw { message: "unclosed open parenthesis" };
@@ -162,12 +167,12 @@ $(document).ready(function () {
 
         }
 
-        lumberJack("returning " + currentValue);
+        //lumberJack("returning " + currentValue);
         return currentValue;
     }
 
     var showString = function (expression) {
-        lumberJack(expression);
+        //lumberJack(expression);
         expression = expression.split("(").join(" ( ")
         expression = expression.split(")").join(" ) ")
         expression = expression.split("!").join(" ! ")
@@ -180,13 +185,38 @@ $(document).ready(function () {
                 realBits.push(trimmed);
             }
         }
-        lumberJack("realBits", realBits);
+        //lumberJack("realBits", realBits);
         try {
             return evaulateExpression(realBits);
         } catch (err) {
             console.error("Error evaulating expression: " + expression, err);
             return false;
         }
+    }
+
+    var getTargetString = function (uie) {
+        var targetString = undefined;
+        if (uie.data("pn-id") !== undefined) {
+            var value = dataIds[uie.data("pn-id")];
+            if (value) {
+                if (uie.data("pn-on-text") !== undefined) {
+                    targetString = uie.data("pn-on-text");
+                }
+            } else {
+                if (uie.data("pn-off-text") !== undefined) {
+                    targetString = uie.data("pn-off-text");
+                }
+            }
+        }
+        if (targetString === undefined) {
+            targetString = uie.data("pn-text");
+        }
+
+        if (targetString === undefined) {
+            console.error("pn-text is not defined", uie)
+        }
+
+        return targetString;
     }
 
     var clearStateClasses = function (uie) {
@@ -196,42 +226,86 @@ $(document).ready(function () {
     }
 
     var growText = function (uie) {
-        if (uie.hasClass(classes.SHOWN)){
-            var currentLength = uie.text().length;
-            var targetString = uie.data("pn-text");
-            if (targetString === undefined) {
-                console.error("pn-text is not defined", uie)
-            }
-            if (currentLength !== targetString.length) {
-                var currentText = targetString.slice(0, currentLength + 1);
-                uie.text(currentText);
-                setTimeout(function () { growText(uie) }, 10);
+        lumberJack("grow text");
+
+        var setCharAt = function (str, index, chr) {
+            if (index > str.length - 1) return str;
+            return str.substr(0, index) + chr + str.substr(index + 1);
+        }
+
+        var removeCharAt = function (str, index) {
+            if (index > str.length - 1) return str;
+            return str.substr(0, index) + str.substr(index + 1);
+        }
+
+        if (!uie.hasClass(classes.HIDDEN) ) {
+            var currentText = uie.text();
+            // target string is a little bit complex
+            var targetString = getTargetString(uie);
+
+
+
+            lumberJack("current text: " + currentText + " target text: " + targetString);
+            var at = 0;
+            while (at < targetString.length || at < currentText.length) {
+
+                if (at >= targetString.length) {
+                    var currentText = removeCharAt(currentText, at);
+                    uie.text(currentText);
+                    lumberJack("removing a char");
+                    lumberJack("current text: " + currentText + " target text: " + targetString);
+
+                    setTimeout(function () { growText(uie) }, 500);
+                    return;
+                }else 
+                if (at >= currentText.length) {
+                    var currentText = targetString.slice(0, currentText.length + 1);
+                    uie.text(currentText);
+                    lumberJack("adding a char");
+                    lumberJack("current text: " + currentText + " target text: " + targetString);
+
+                    setTimeout(function () { growText(uie) }, 500);
+                    return;
+                }else 
+                if (targetString.charAt(at) !== currentText.charAt(at)) {
+                    var currentText = setCharAt(currentText, at, targetString.charAt(at));
+                    uie.text(currentText);
+                    lumberJack("changing a char");
+                    lumberJack("current text: " + currentText + " target text: " + targetString);
+
+                    setTimeout(function () { growText(uie) }, 500);
+                    return;
+                }
+                at++
             }
         }
     }
 
-
     var showPnIf = function (uie) {
-        // TODO special case  for first pass
-        var applyPublicClasses = function (uie) {
-            if (uie.data("pn-if-class")) {
-                lumberJack("adding class: " + uie.data("pn-if-class"));
-                uie.addClass(uie.data("pn-if-class"));
-            }
-            if (uie.data("pn-else-class")) {
-                lumberJack("removing class: " + uie.data("pn-else-class"));
-                uie.removeClass(uie.data("pn-else-class"));
-            }
-        }
+
+        //var applyPublicClasses = function (uie) {
+        //    if (uie.data("pn-if-class")) {
+        //        lumberJack("adding class: " + uie.data("pn-if-class"));
+        //        uie.addClass(uie.data("pn-if-class"));
+        //    }
+        //    if (uie.data("pn-else-class")) {
+        //        lumberJack("removing class: " + uie.data("pn-else-class"));
+        //        uie.removeClass(uie.data("pn-else-class"));
+        //    }
+        //}
 
         if (!uiHasStatusClass(uie)) {
-            applyPublicClasses(uie);
+            //applyPublicClasses(uie);
             uie.addClass(classes.SHOWN);
 
+
+
             if (uie.css("display") === "inline") {
-                var currentText = uie.text();
-                uie.data("pn-text", currentText);
-                //uie.text("");
+                var targetString = getTargetString(uie);
+                uie.data("pn-text", targetString);
+                uie.text(targetString);
+
+
             } else {
                 // we assume we are already showing
             }
@@ -239,7 +313,7 @@ $(document).ready(function () {
 
         } else if (!uie.hasClass(classes.SHOWN)) {//(!uie.hasClass(classes.SHOWING)) && (
 
-            applyPublicClasses(uie);
+            //applyPublicClasses(uie);
 
             clearStateClasses(uie);
             uie.addClass(classes.SHOWN);
@@ -262,7 +336,7 @@ $(document).ready(function () {
 
     var removeText = function (uie) {
         // TODO special case  for first pass
-        if (uie.hasClass(classes.HIDDEN)){
+        if (!uie.hasClass(classes.SHOWN)) {
             var currentText = uie.text();
             if (uie.data("pn-text") === undefined) {
                 uie.data("pn-text", currentText);
@@ -276,20 +350,23 @@ $(document).ready(function () {
     }
 
     var hidePnIf = function (uie) {
-        var applyPublicClasses = function (uie) {
-            if (uie.data("pn-if-class")) {
-                lumberJack("removing class: " + uie.data("pn-if-class"));
-                uie.removeClass(uie.data("pn-if-class"));
-            }
-            if (uie.data("pn-else-class")) {
-                lumberJack("adding class: " + uie.data("pn-else-class"));
-                uie.addClass(uie.data("pn-else-class"));
-            }
-        }
+        //var applyPublicClasses = function (uie) {
+        //    if (uie.data("pn-if-class")) {
+        //        lumberJack("removing class: " + uie.data("pn-if-class"));
+        //        uie.removeClass(uie.data("pn-if-class"));
+        //    }
+        //    if (uie.data("pn-else-class")) {
+        //        lumberJack("adding class: " + uie.data("pn-else-class"));
+        //        uie.addClass(uie.data("pn-else-class"));
+        //    }
+        //}
 
         if (!uiHasStatusClass(uie)) {
-            applyPublicClasses(uie);
+            //applyPublicClasses(uie);
             uie.addClass(classes.HIDDEN);
+            if (uie.css("display") !== "inline") {
+                uie.css("opacity", 0);
+            }
 
             if (uie.css("display") === "inline") {
                 var currentText = uie.text();
@@ -304,7 +381,7 @@ $(document).ready(function () {
             // man should we do this automatically?
 
 
-            applyPublicClasses(uie);
+            //applyPublicClasses(uie);
 
             clearStateClasses(uie);
             uie.addClass(classes.HIDDEN);
@@ -330,101 +407,145 @@ $(document).ready(function () {
         var contents = $("[data-pn-if]");
         for (var i = 0; i < contents.length; i++) {
             var content = $(contents[i]);
-            lumberJack(content.data("pn-if"))
+            //lumberJack(content.data("pn-if"))
             var toShow = showString(content.data("pn-if"));
             if (toShow) {
-                lumberJack("show");
+                //lumberJack("show");
                 showPnIf(content);
             } else {
-                lumberJack("hide");
+                //lumberJack("hide");
                 hidePnIf(content);
             }
         }
+        // we als update pn-id 
+        // but only those that are not also np-if
+        // we really don't need to call this on everybody
+        // just the one that got changed;
+        //var pnIds = $("[data-pn-id]");
+        //for (var i = 0; i < pnIds.length; i++) {
+        //    var pnId = $(pnIds[i]);
+        //    if (pnId.data("np-if") === undefined) {
+        //        showPnIf(content);
+        //    }
+        //}
     }
 
+    // this updates
     var updatePnIds = function () {
         var pnIds = $("[data-pn-id]");
         for (var i = 0; i < pnIds.length; i++) {
             var pnId = $(pnIds[i]);
-            var val = dataIds[pnId.data("pn-id")];
+            //if (pnId.data("np-if") === undefined) {
+            growText(pnId);
+            //}
 
-            if (val) {
-                if (pnId.data("pn-on-text")) {
-                    lumberJack("set text to " + pnId.data("pn-on-text"));
-                    pnId.text(pnId.data("pn-on-text"));
+
+    //        var val = dataIds[pnId.data("pn-id")];
+
+    //        if (val) {
+    //            // we are not going to set the text if we are not showing
+    //            if (pnId.data("pn-on-class")) {
+    //                pnId.addClass(pnId.data("pn-on-class"));
+    //            }
+    //            if (pnId.data("pn-off-class")) {
+    //                pnId.removeClass(pnId.data("pn-off-class"));
+    //            }
+    //        } else {
+    //            if (pnId.data("pn-on-class")) {
+    //                pnId.removeClass(pnId.data("pn-on-class"));
+    //            }
+    //            if (pnId.data("pn-off-class")) {
+    //                pnId.addClass(pnId.data("pn-off-class"));
+    //            }
+    //        }
+        }
+    }
+
+    var updateClasses = function () {
+
+        var classes = [
+            {
+                css_class: "pn-id",
+                selector: function () { return $("[data-pn-id]"); }
+            },
+            {
+                css_class: "pn-if",
+                selector: function () { return $("[data-pn-if]"); }
+            },
+            {
+                css_class: "pn-on",
+                selector: function () {
+                    var pnIds = $("[data-pn-id]");
+                    var res = [];
+                    for (var i = 0; i < pnIds.length; i++) {
+                        var pnId = $(pnIds[i]);
+                        var val = dataIds[pnId.data("pn-id")];
+                        if (val) {
+                            res.push(pnIds[i])
+                        }
+                    }
+                    return res;
                 }
-                if (pnId.data("pn-on-class")) {
-                    pnId.addClass(pnId.data("pn-on-class"));
+            },
+            {
+                css_class: "pn-off",
+                selector: function () {
+                    var pnIds = $("[data-pn-id]");
+                    var res = [];
+                    for (var i = 0; i < pnIds.length; i++) {
+                        var pnId = $(pnIds[i]);
+                        var val = dataIds[pnId.data("pn-id")];
+                        if (!val) {
+                            res.push(pnIds[i])
+                        }
+                    }
+                    return res;
                 }
-                if (pnId.data("pn-off-class")) {
-                    pnId.removeClass(pnId.data("pn-off-class"));
-                }
-            } else {
-                if (pnId.data("pn-off-text")) {
-                    lumberJack("set text to " + pnId.data("pn-off-text"));
-                    pnId.text(pnId.data("pn-off-text"));
-                }
-                if (pnId.data("pn-on-class")) {
-                    pnId.removeClass(pnId.data("pn-on-class"));
-                }
-                if (pnId.data("pn-off-class")) {
-                    pnId.addClass(pnId.data("pn-off-class"));
-                }
+            }];
+
+        for (var j = 0; j < classes.length; j++) {
+            var cls = classes[j];
+            var oldPnIds = $("." + cls.css_class);
+            for (var i = 0; i < oldPnIds.length; i++) {
+                var oldPnId = $(oldPnIds[i])
+                oldPnId.removeClass(cls.css_class);
+            }
+            var pnIds = cls.selector();
+            for (var i = 0; i < pnIds.length; i++) {
+                var pnId = $(pnIds[i])
+                pnId.addClass(cls.css_class);
             }
         }
     }
 
+    var updateAll = function () {
+        updatePnIds();
+        updatePnIfs();
+        updateClasses();
+    }
+
     // we need to populate dataIds
-    var buttons = $("button[data-pn-id]");
+    var buttons = $("[data-pn-id]");
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
-        dataIds[$(button).data("pn-id")] = ($(button).data("pn-on") == "true" ? true : false);
-    }
-
-    var updateClasses = function () {
-        // we clear out the classes 
-        var oldPnIds = $(".pn-id");
-        for (var i = 0; i < oldPnIds.length; i++) {
-            var oldPnId = $(oldPnIds[i])
-            oldPnId.removeClass("pn-id");
-        }
-        var oldPnIfs = $(".pn-if");
-        for (var i = 0; i < oldPnIfs.length; i++) {
-            var oldPnIf = $(oldPnIfs[i])
-            oldPnIf.removeClass("pn-if");
-        }
-
-        // and then add them back
-        var pnIds = $("[data-pn-id]");
-        for (var i = 0; i < pnIds.length; i++) {
-            var pnId = $(pnIds[i])
-            pnId.addClass("pn-id");
-        }
-        var pnIfs = $("[data-pn-if]");
-        for (var i = 0; i < pnIfs.length; i++) {
-            var pnIf = $(pnIfs[i])
-            pnIf.addClass("pn-if");
-        }
-    }
-
-    var updateAll = function () {
-        updateClasses();
-        updatePnIfs();
-        updatePnIds();
+        var value = ($(button).data("pn-start-on") === "true" ? true : false);
+        dataIds[$(button).data("pn-id")] = value;
+        $(button).data("pn-on", value);
     }
 
     updateAll();
 
     // when any of our buttons are clicked
     // we need to update all the .parn-content
-    $("button[data-pn-id]").click(function () {
+    $("[data-pn-id]").click(function () {
         // update our dataId
         var val = !dataIds[$(this).data("pn-id")];
         dataIds[$(this).data("pn-id")] = val;
         $(this).data("pn-on", val);
 
-        lumberJack(dataIds)
+        //lumberJack(dataIds)
         // update all the content
         updateAll();
+
     });
 });
