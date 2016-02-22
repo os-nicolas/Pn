@@ -19,14 +19,6 @@
 //  data-pn-off-text
 //  data-pn-if
 
-// I think i am going to remove these
-// keep it slim right?
-// we are generating classes for all of these things:
-//  data-pn-if-class
-//  data-pn-else-class
-//  data-pn-on-class
-//  data-pn-off-class
-
 $(document).ready(function () {
     var dataIds = {};
     var HIDE_TIME = 1000;
@@ -81,7 +73,6 @@ $(document).ready(function () {
             if (currentOperation === NONE) {
                 throw { message: "operation expected" };
             }
-            //lumberJack("start operate: flipnext=" + flipNext + " currentOperation=" + currentOperation + " boolean=" + boolean + " currentValue=" + currentValue);
             if (flipNext) {
                 flipNext = false;
                 boolean = !boolean;
@@ -98,7 +89,6 @@ $(document).ready(function () {
                 throw { message: "unexpected operation:" + currentOperation };
             }
             currentOperation = NONE;
-            //lumberJack("end operate: flipnext=" + flipNext + " currentOperation=" + currentOperation + " boolean=" + boolean + " currentValue=" + currentValue);
         }
 
         // I want to get ride of this and have the 
@@ -117,7 +107,6 @@ $(document).ready(function () {
         }
 
         var setOperation = function (newOp) {
-            //lumberJack("setOp: " + newOp);
             if (currentOperation !== NONE) {
                 throw { message: "can not set operation to:" + newOp + " it is already set to: " + currentOperation };
             }
@@ -143,7 +132,6 @@ $(document).ready(function () {
                     list.splice(0, 1);
                 }
                 if (depth === 0) {
-                    //lumberJack("inner: ", inner);
                     operate(evaulateExpression(inner));
                 } else {
                     throw { message: "unclosed open parenthesis" };
@@ -164,10 +152,8 @@ $(document).ready(function () {
         }
 
         if (currentOperation === "") {
-
+            // TODO?
         }
-
-        //lumberJack("returning " + currentValue);
         return currentValue;
     }
 
@@ -208,6 +194,11 @@ $(document).ready(function () {
                 }
             }
         }
+
+        if (uie.data("pn-text") === undefined) {
+            uie.data("pn-text", uie.text());
+        }
+
         if (targetString === undefined) {
             targetString = uie.data("pn-text");
         }
@@ -226,8 +217,7 @@ $(document).ready(function () {
     }
 
     var growText = function (uie) {
-        lumberJack("grow text");
-
+        
         var setCharAt = function (str, index, chr) {
             if (index > str.length - 1) return str;
             return str.substr(0, index) + chr + str.substr(index + 1);
@@ -242,38 +232,26 @@ $(document).ready(function () {
             var currentText = uie.text();
             // target string is a little bit complex
             var targetString = getTargetString(uie);
-
-
-
-            lumberJack("current text: " + currentText + " target text: " + targetString);
             var at = 0;
+            var SLEEP_TIME = 10;
             while (at < targetString.length || at < currentText.length) {
 
                 if (at >= targetString.length) {
                     var currentText = removeCharAt(currentText, at);
                     uie.text(currentText);
-                    lumberJack("removing a char");
-                    lumberJack("current text: " + currentText + " target text: " + targetString);
-
-                    setTimeout(function () { growText(uie) }, 500);
+                    setTimeout(function () { growText(uie) }, SLEEP_TIME);
                     return;
                 }else 
                 if (at >= currentText.length) {
                     var currentText = targetString.slice(0, currentText.length + 1);
                     uie.text(currentText);
-                    lumberJack("adding a char");
-                    lumberJack("current text: " + currentText + " target text: " + targetString);
-
-                    setTimeout(function () { growText(uie) }, 500);
+                    setTimeout(function () { growText(uie) }, SLEEP_TIME);
                     return;
                 }else 
                 if (targetString.charAt(at) !== currentText.charAt(at)) {
                     var currentText = setCharAt(currentText, at, targetString.charAt(at));
                     uie.text(currentText);
-                    lumberJack("changing a char");
-                    lumberJack("current text: " + currentText + " target text: " + targetString);
-
-                    setTimeout(function () { growText(uie) }, 500);
+                    setTimeout(function () { growText(uie) }, SLEEP_TIME);
                     return;
                 }
                 at++
@@ -282,38 +260,15 @@ $(document).ready(function () {
     }
 
     var showPnIf = function (uie) {
-
-        //var applyPublicClasses = function (uie) {
-        //    if (uie.data("pn-if-class")) {
-        //        lumberJack("adding class: " + uie.data("pn-if-class"));
-        //        uie.addClass(uie.data("pn-if-class"));
-        //    }
-        //    if (uie.data("pn-else-class")) {
-        //        lumberJack("removing class: " + uie.data("pn-else-class"));
-        //        uie.removeClass(uie.data("pn-else-class"));
-        //    }
-        //}
-
         if (!uiHasStatusClass(uie)) {
-            //applyPublicClasses(uie);
             uie.addClass(classes.SHOWN);
-
-
-
             if (uie.css("display") === "inline") {
                 var targetString = getTargetString(uie);
-                uie.data("pn-text", targetString);
                 uie.text(targetString);
-
-
             } else {
                 // we assume we are already showing
             }
-
-
-        } else if (!uie.hasClass(classes.SHOWN)) {//(!uie.hasClass(classes.SHOWING)) && (
-
-            //applyPublicClasses(uie);
+        } else if (!uie.hasClass(classes.SHOWN)) {
 
             clearStateClasses(uie);
             uie.addClass(classes.SHOWN);
@@ -335,7 +290,6 @@ $(document).ready(function () {
     }
 
     var removeText = function (uie) {
-        // TODO special case  for first pass
         if (!uie.hasClass(classes.SHOWN)) {
             var currentText = uie.text();
             if (uie.data("pn-text") === undefined) {
@@ -350,19 +304,8 @@ $(document).ready(function () {
     }
 
     var hidePnIf = function (uie) {
-        //var applyPublicClasses = function (uie) {
-        //    if (uie.data("pn-if-class")) {
-        //        lumberJack("removing class: " + uie.data("pn-if-class"));
-        //        uie.removeClass(uie.data("pn-if-class"));
-        //    }
-        //    if (uie.data("pn-else-class")) {
-        //        lumberJack("adding class: " + uie.data("pn-else-class"));
-        //        uie.addClass(uie.data("pn-else-class"));
-        //    }
-        //}
 
         if (!uiHasStatusClass(uie)) {
-            //applyPublicClasses(uie);
             uie.addClass(classes.HIDDEN);
             if (uie.css("display") !== "inline") {
                 uie.css("opacity", 0);
@@ -380,12 +323,8 @@ $(document).ready(function () {
             // this means we need to select on display type
             // man should we do this automatically?
 
-
-            //applyPublicClasses(uie);
-
             clearStateClasses(uie);
             uie.addClass(classes.HIDDEN);
-
 
             if (uie.css("display") === "inline") {
                 removeText(uie);
@@ -417,17 +356,6 @@ $(document).ready(function () {
                 hidePnIf(content);
             }
         }
-        // we als update pn-id 
-        // but only those that are not also np-if
-        // we really don't need to call this on everybody
-        // just the one that got changed;
-        //var pnIds = $("[data-pn-id]");
-        //for (var i = 0; i < pnIds.length; i++) {
-        //    var pnId = $(pnIds[i]);
-        //    if (pnId.data("np-if") === undefined) {
-        //        showPnIf(content);
-        //    }
-        //}
     }
 
     // this updates
@@ -435,29 +363,9 @@ $(document).ready(function () {
         var pnIds = $("[data-pn-id]");
         for (var i = 0; i < pnIds.length; i++) {
             var pnId = $(pnIds[i]);
-            //if (pnId.data("np-if") === undefined) {
-            growText(pnId);
-            //}
-
-
-    //        var val = dataIds[pnId.data("pn-id")];
-
-    //        if (val) {
-    //            // we are not going to set the text if we are not showing
-    //            if (pnId.data("pn-on-class")) {
-    //                pnId.addClass(pnId.data("pn-on-class"));
-    //            }
-    //            if (pnId.data("pn-off-class")) {
-    //                pnId.removeClass(pnId.data("pn-off-class"));
-    //            }
-    //        } else {
-    //            if (pnId.data("pn-on-class")) {
-    //                pnId.removeClass(pnId.data("pn-on-class"));
-    //            }
-    //            if (pnId.data("pn-off-class")) {
-    //                pnId.addClass(pnId.data("pn-off-class"));
-    //            }
-    //        }
+            if (pnId.data("np-if") === undefined) {
+                growText(pnId);
+            }
         }
     }
 
@@ -543,7 +451,6 @@ $(document).ready(function () {
         dataIds[$(this).data("pn-id")] = val;
         $(this).data("pn-on", val);
 
-        //lumberJack(dataIds)
         // update all the content
         updateAll();
 
