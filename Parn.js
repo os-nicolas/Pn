@@ -21,7 +21,7 @@
 
 $(document).ready(function () {
     var dataIds = {};
-    var HIDE_TIME = 1000;
+    var HIDE_TIME = 10000;
     var DEBUG = true;
 
     // this is our logger
@@ -262,44 +262,15 @@ $(document).ready(function () {
     var showPnIf = function (uie) {
         if (!uiHasStatusClass(uie)) {
             uie.addClass(classes.SHOWN);
-            if (uie.css("display") === "inline") {
-                var targetString = getTargetString(uie);
-                uie.text(targetString);
-            } else {
-                // we assume we are already showing
-            }
+            uie.show();
         } else if (!uie.hasClass(classes.SHOWN)) {
 
             clearStateClasses(uie);
             uie.addClass(classes.SHOWN);
+            uie.show();
 
-            if (uie.css("display") === "inline") {
-                growText(uie);
-            } else {
-                uie.animate({
-                    width: "show",
-                    height: "show"
-                }, HIDE_TIME / 2);
-                uie.animate({
-                    opacity: "1"
-                }, HIDE_TIME / 2);
-            }
         } else {
             // we are already shown
-        }
-    }
-
-    var removeText = function (uie) {
-        if (!uie.hasClass(classes.SHOWN)) {
-            var currentText = uie.text();
-            if (uie.data("pn-text") === undefined) {
-                uie.data("pn-text", currentText);
-            }
-            if (currentText.length !== 0) {
-                currentText = currentText.slice(0, -1);
-                uie.text(currentText);
-                setTimeout(function () { removeText(uie) }, 10);
-            }
         }
     }
 
@@ -307,36 +278,14 @@ $(document).ready(function () {
 
         if (!uiHasStatusClass(uie)) {
             uie.addClass(classes.HIDDEN);
-            if (uie.css("display") !== "inline") {
-                uie.css("opacity", 0);
-            }
-
-            if (uie.css("display") === "inline") {
-                var currentText = uie.text();
-                uie.data("pn-text", currentText);
-                uie.text("");
-            } else {
-                uie.hide();
-            }
+            uie.hide();
         } else if (!uie.hasClass(classes.HIDDEN)) {//(!uie.hasClass(classes.HIDING)) && (
             // we need to think about how to hide you nicely.
             // this means we need to select on display type
             // man should we do this automatically?
-
             clearStateClasses(uie);
             uie.addClass(classes.HIDDEN);
-
-            if (uie.css("display") === "inline") {
-                removeText(uie);
-            } else {
-                uie.animate({
-                    opacity: "0"
-                }, HIDE_TIME / 2);
-                uie.animate({
-                    width: "hide",
-                    height: "hide"
-                }, HIDE_TIME / 2);
-            }
+            uie.hide();
         } else {
             // we are already hiding do nothing
         }
@@ -363,9 +312,10 @@ $(document).ready(function () {
         var pnIds = $("[data-pn-id]");
         for (var i = 0; i < pnIds.length; i++) {
             var pnId = $(pnIds[i]);
-            if (pnId.data("np-if") === undefined) {
-                growText(pnId);
-            }
+            //if (pnId.data("pn-if") === undefined) {
+                pnId.text(getTargetString(pnId));
+                //growText(pnId);
+            //}
         }
     }
 
