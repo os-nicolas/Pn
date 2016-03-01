@@ -8,9 +8,9 @@
     <script src="Parn.js"></script>
 </head>
 <body>
-
-    Articles online should be more interactive.<span data-pn-id="what" data-pn-if="!why" data-pn-on-text="">(how so?)</span><span data-pn-id="why" data-pn-if="!what" data-pn-on-text="">(why?)</span>
-
+    <p>
+        Articles online should be more interactive.<span data-pn-id="what" data-pn-if="!why" data-pn-on-text="">(how so?)</span><span data-pn-id="why" data-pn-if="!what" data-pn-on-text="">(why?)</span>
+    </p>
     <div data-pn-if="what">
         <h2>How so?</h2>
         <p>
@@ -27,7 +27,7 @@
         <div data-pn-if="what-why">
             <h2>Why?</h2>
             <p>
-                Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example" data-pn-on-text="">(...)</span><span data-pn-if="for-example">  this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life.</span>
+                Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example" data-pn-on-text="">(...)</span><span data-pn-if="for-example">this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life. These are very different topics with very different audiances, but because readers have some control over what content is shown I can serve all comers.</span>
                 <span data-pn-id="why-2" data-pn-on-text="">(another reason?)</span>
             </p>
 
@@ -39,12 +39,11 @@
                 </p>
             </div>
         </div>
-
     </div>
     <div data-pn-if="why">
         <h2>Why?</h2>
         <p>
-            Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example"data-pn-on-text="">(...)</span><span data-pn-if="for-example">  this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life.</span>
+            Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example" data-pn-on-text="">(...)</span><span data-pn-if="for-example"> this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life. These are very different topics with very different audiances, but because readers have some control over what content is shown I can serve all comers.</span>
             <span data-pn-id="why-2" data-pn-on-text="">(another reason?)</span>
         </p>
 
@@ -73,7 +72,8 @@
     </div>
 
     <p>
-        To help people build interactive sites I have written a little script I am calling Pn (short for Parenthesis). <span data-pn-id="how" data-pn-on-text="">(how to use it)
+        To help people build interactive sites I have written a little script I am calling Pn (short for Parenthesis). <span data-pn-id="how" data-pn-on-text="">
+            (how to use it)
         </span>
     </p>
 
@@ -84,9 +84,14 @@
 
         <h2>Getting Started</h2>
 
-        To use Pn add the following line to the header of your html document.
+        To use Pn add the following lines to the header of your html document.
 
-        <code>line</code>
+        [html]
+        <!-- jQUery, required by Pn -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <!-- Pn -->
+        <script src="Parn.js"></script>
+        [/html]
 
         Pn allows you to easily create the follow:
 
@@ -94,11 +99,12 @@
         <p data-pn-if="example-1">some text to show</p>
 
         By using the code below:
-
-        <code>
+        <p>
+            [html]
             <span data-pn-id="example">Clickable</span>
             <p data-pn-if="example">some text to show</p>
-        </code>
+        [/html]
+        </p>
         <p>
             With Pn you can make two kinds of elements, clickable elements and showable elemets.
         </p>
@@ -137,11 +143,10 @@
         <div data-pn-if="example-2">
             <p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
             <span data-pn-id="hide" data-pn-start-on="true">hide help</span>
-
-            <code>
+            [html]
                 <p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
                 <span data-pn-id="hide" data-pn-start-on="true">hide help</span>
-            </code>
+            [/html]
         </div>
 
         <h3>data-pn-on-text</h3>
@@ -154,10 +159,10 @@
         <div data-pn-if="example-3">
             <span data-pn-id="example" data-pn-on-text="show less">show more</span>
             <p data-pn-if="example">some text to show</p>
-            <code>
+            [html]
                 <span data-pn-id="example" data-pn-on-text="show less">show more</span>
                 <p data-pn-if="example">some text to show</p>
-            </code>
+            [/html]
         </div>
 
         <h3>
@@ -172,10 +177,10 @@
         <div data-pn-if="example-4">
             <p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
             <span data-pn-id="hide" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
-            <pre><code>
+            [html]
 <p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
 <span data-pn-id="hide" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
-            </code></pre>
+            [/html]
         </div>
     </div>
 </body>
