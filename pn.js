@@ -386,7 +386,10 @@ $(document).ready(function () {
     var buttons = $("[data-pn-id]");
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
-        var value = ($(button).data("pn-start-on") === "true" ? true : false);
+        var value = (($(button).data("pn-start-on")+""  == "true") ? true : false);
+        //if (value) {
+        console.log($(button).data("pn-id") + " " + $(button).data("pn-start-on") + " " + ($(button).data("pn-start-on")+"" == "true"));
+        //}
         dataIds[$(button).data("pn-id")] = value;
         $(button).data("pn-on", value);
     }

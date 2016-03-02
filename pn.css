@@ -4,6 +4,7 @@
 
 .pn-id {
         border-radius:.15em;
+        cursor:pointer;
 }
 
 .pn-id.pn-off {

@@ -3,9 +3,9 @@
 <head>
     <title></title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" type="text/css" href="midnight.css">
+    <link rel="stylesheet" type="text/css" href="pn.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="Parn.js"></script>
+    <script src="pn.js"></script>
 </head>
 <body>
     <p>
@@ -27,7 +27,7 @@
         <div data-pn-if="what-why">
             <h2>Why?</h2>
             <p>
-                Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example" data-pn-on-text="">(...)</span><span data-pn-if="for-example">this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life. These are very different topics with very different audiances, but because readers have some control over what content is shown I can serve all comers.</span>
+                Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example" data-pn-on-text="">(...)</span><span data-pn-if="for-example">this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life. These are very different topics with very different audiences, but because readers have some control over what content is shown I can serve all comers.</span>
                 <span data-pn-id="why-2" data-pn-on-text="">(another reason?)</span>
             </p>
 
@@ -43,7 +43,7 @@
     <div data-pn-if="why">
         <h2>Why?</h2>
         <p>
-            Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example" data-pn-on-text="">(...)</span><span data-pn-if="for-example"> this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life. These are very different topics with very different audiances, but because readers have some control over what content is shown I can serve all comers.</span>
+            Readers benefit from interactivity because they have different amounts of background and are interested in different parts of an article. Letting users drill down into topics that interest them or get background when they need it allows an author to serve a diverse audience in a more personal manner. For example <span data-pn-id="for-example" data-pn-on-text="">(...)</span><span data-pn-if="for-example"> this post attempts to address two topics, why articles should be move interactive and how content creators can use my script to bring their sites to life. These are very different topics with very different audiences, but because readers have some control over what content is shown I can serve all comers.</span>
             <span data-pn-id="why-2" data-pn-on-text="">(another reason?)</span>
         </p>
 
@@ -95,91 +95,78 @@
 
         Pn allows you to easily create the follow:
 
-        <span data-pn-id="example-1">Clickable</span>
-        <p data-pn-if="example-1">some text to show</p>
-
+        <div class="demo">
+            <span data-pn-id="example-1">Clickable</span>
+            <p data-pn-if="example-1">some text to show</p>
+        </div>
         By using the code below:
         <p>
-            [html]
-            <span data-pn-id="example">Clickable</span>
-            <p data-pn-if="example">some text to show</p>
+        [html]
+        <span data-pn-id="id1">Clickable</span>
+        <p data-pn-if="id1">some text to show</p>
         [/html]
         </p>
         <p>
-            With Pn you can make two kinds of elements, clickable elements and showable elemets.
+            With Pn you can make two kinds of elements, <b>clickable elements</b> and <b>showable elemets</b>.
         </p>
         <p>
-            a clickable element is defined by the attribute data-pn-id, data-pn-id is used to uniquely identify a clickable item, In the above example the clickable item is identified by "example". A clickable item keeps track of if it is "on" or "off" (true or false) . A items starts "off" and toggles when it is clicked. <span data-pn-id="naming-rules" data-pn-on-text="">(show data-pn-id naming rules)</span><span data-pn-if="naming-rules">data-pn-id's can not include the character '(',')','!' or ' ' and can not be "and" or "or".</span>
+            A <b>clickable element</b> is defined by the attribute data-pn-id, data-pn-id is used to uniquely identify a clickable item, In the above example the clickable item is identified by "example". A clickable item keeps track of if it is "on" or "off" (true or false) . A items starts "off" and toggles when it is clicked. <span data-pn-id="naming-rules" data-pn-on-text="">(data-pn-id naming rules)</span><span data-pn-if="naming-rules">data-pn-id's can not include the character '(',')','!' or ' ' and can not be "and" or "or".</span>
         </p>
-        <div>
-            a Showable element is identified by the attribute data-pn-if, data-pn-if contains a logical expression, When this expression evaluates to true the contents of the tag are shown. The expression consisting of logical operations and the identifiers of clickable elements. <span data-pn-id="example-pn-ifs" data-pn-on-text="">(examples....)</span>
-            <span data-pn-if="example-pn-ifs">
-                for example data-pn-if could be "some-identifier" or "some-indentifer and another-indentifer" or "some-indentifer and (another-andentifer or third-identifier)"
-            </span>
-            The identifier for a clickable element is evaluated to true when its clickable element is on and evaluated to false otherwise.  In the example above, the showable element has the value example for it's data-pn-if this mean it will be shown when the clickable item with a data-pn-id of "example" (the span right above it) is on.
-        </div>
-
+        <p>
+            A <b>showable element</b> is identified by the attribute data-pn-if, data-pn-if contains a logical expression, When this expression evaluates to true the contents of the tag are shown. The expression consisting of logical operations and the identifiers of clickable elements. <span data-pn-id="example-pn-ifs" data-pn-on-text="">(examples)</span><span data-pn-if="example-pn-ifs"> For example data-pn-if could be "some-identifier" or "some-indentifer and another-indentifer" or "some-indentifer and (another-andentifer or third-identifier)" </span>The identifier for a clickable element is evaluated to true when its clickable element is on and evaluated to false otherwise.  In the example above, the showable element has the value example for it's data-pn-if this mean it will be shown when the clickable item with a data-pn-id of "example" (the span right above it) is on.
+        </p>
         <h2>CSS</h2>
-
         I have included several CSS classes to allow users to style there pn elements.
         <ul>
-            <li> pn-id: applied to all elements with the attribute data-pn-id</li>
-            <li>pn-on: applied to all elements with the attribute data-pn-id that are currently on.</li>
-            <li>pn-off:  applied to all elements with the attribute data-pn-id that are currently off.</li>
-            <li>pn-if: applied to all elements with the attribute data-pn-if.</li>
-            <li>pn-shown: applied to all elements with the attribute data-pn-if that are currently being shown.</li>
-            <li>pn-hidden: applied to all elements with the attribute data-pn-if that are currently being hidden.</li>
+            <li> <b>pn-id</b>: applied to all elements with the attribute data-pn-id</li>
+            <li> <b>pn-on</b>: applied to all elements with the attribute data-pn-id that are currently on.</li>
+            <li> <b>pn-off</b>:  applied to all elements with the attribute data-pn-id that are currently off.</li>
+            <li> <b>pn-if</b>: applied to all elements with the attribute data-pn-if.</li>
+            <li> <b>pn-shown</b>: applied to all elements with the attribute data-pn-if that are currently being shown.</li>
+            <li> <b>pn-hidden</b>: applied to all elements with the attribute data-pn-if that are currently being hidden.</li>
         </ul>
-
-        <h2>Other attributes:</h2>
-
-        <h3>data-pn-start-on</h3>
-
-        <p>you can specify you want a clickable element to start "on" by adding the attribute data-pn-start-on="true"</p>
-
-        <span data-pn-id="example-2">
-            (example)
-        </span>
+        <h2 data-pn-id="example-2">
+            data-pn-start-on
+        </h2>
         <div data-pn-if="example-2">
-            <p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
-            <span data-pn-id="hide" data-pn-start-on="true">hide help</span>
+            <p>you can specify you want a clickable element to start "on" by adding the attribute data-pn-start-on="true"</p>
+            <div class="demo">
+                <p data-pn-if="start-on">hit Control+shift+J to open developer tools</p>
+                <span data-pn-id="start-on" data-pn-start-on="true">hide help</span>
+            </div>
             [html]
-                <p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
-                <span data-pn-id="hide" data-pn-start-on="true">hide help</span>
+            <p data-pn-if="id2">hit Control+shift+J to open developer tools</p>
+            <span data-pn-id="id2" data-pn-start-on="true">hide help</span>
             [/html]
         </div>
 
-        <h3>data-pn-on-text</h3>
-
-        <p>The text to display in a clickable element while it is on. if this attribute is not defined the element will display the text it was imitated with (huh) when it is on.</p>
-
-        <span data-pn-id="example-3">
-            (example)
-        </span>
+        <h2 data-pn-id="example-3">
+            data-pn-on-text
+        </h2>
         <div data-pn-if="example-3">
-            <span data-pn-id="example" data-pn-on-text="show less">show more</span>
-            <p data-pn-if="example">some text to show</p>
+            <p>The text to display in a clickable element while it is on. if this attribute is not defined the element will display the text it was imitated with (huh) when it is on.</p>
+            <div class="demo">
+                <span data-pn-id="on-text" data-pn-on-text="show less">show more</span>
+                <p data-pn-if="on-text">some text to show</p>
+            </div>
             [html]
-                <span data-pn-id="example" data-pn-on-text="show less">show more</span>
-                <p data-pn-if="example">some text to show</p>
+            <span data-pn-id="id3" data-pn-on-text="show less">show more</span>
+            <p data-pn-if="id3">some text to show</p>
             [/html]
         </div>
 
-        <h3>
+        <h2 data-pn-id="example-4">
             data-pn-off-text
-        </h3>
-
-        <p>The text to display in a clickable element while it is off. if this attribute is not defined the element will display the text it was imitated with (huh) when it is off.</p>
-
-        <span data-pn-id="example-4">
-            (example)
-        </span>
+        </h2>
         <div data-pn-if="example-4">
-            <p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
-            <span data-pn-id="hide" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
+            <p>The text to display in a clickable element while it is off. if this attribute is not defined the element will display the text it was imitated with (huh) when it is off.</p>
+            <div class="demo">
+                <p data-pn-if="off-text">hit Control+shift+J to open developer tools</p>
+                <span data-pn-id="off-text" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
+            </div>
             [html]
-<p data-pn-if="hide">hit Control+shift+J to open developer tools</p>
-<span data-pn-id="hide" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
+            <p data-pn-if="id4">hit Control+shift+J to open developer tools</p>
+            <span data-pn-id="id4" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
             [/html]
         </div>
     </div>
