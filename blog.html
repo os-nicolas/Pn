@@ -9,7 +9,7 @@
 </head>
 <body>
     <p>
-        Articles online should be more interactive.<span data-pn-id="what" data-pn-if="!why" data-pn-on-text="">(how so?)</span><span data-pn-id="why" data-pn-if="!what" data-pn-on-text="">(why?)</span>
+        Articles online should be more interactive. To help people build interactive sites I have written a little script I am calling Pn (short for Parenthesis).<span data-pn-id="what" data-pn-if="!why" data-pn-on-text="">(how so?)</span> <span data-pn-id="why" data-pn-if="!what" data-pn-on-text="">(why?)</span>
     </p>
     <div data-pn-if="what">
         <h2>How so?</h2>
@@ -70,28 +70,21 @@
         </div>
 
     </div>
-
-    <p>
-        To help people build interactive sites I have written a little script I am calling Pn (short for Parenthesis). <span data-pn-id="how" data-pn-on-text="">
-            (how to use it)
-        </span>
-    </p>
-
-
+    <h1 data-pn-id="how" data-pn-start-on="true">Pn.js</h1>
     <div data-pn-if="how">
-
-        <h1>Pn.js</h1>
-
-        <h2>Getting Started</h2>
 
         To use Pn add the following lines to the header of your html document.
 
-        [html]
-        <!-- jQUery, required by Pn -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-        <!-- Pn -->
-        <script src="Parn.js"></script>
-        [/html]
+        <div class="demo">
+            [html]
+            <!-- jQUery, required by Pn -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+            <!-- Pn -->
+            <script src="Parn.js"></script>
+            <!-- some basic css for Pn (optional) -->
+            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/os-nicolas/Pn/master/pn.css">
+            [/html]
+        </div>
 
         Pn allows you to easily create the follow:
 
@@ -100,74 +93,82 @@
             <p data-pn-if="example-1">some text to show</p>
         </div>
         By using the code below:
-        <p>
-        [html]
-        <span data-pn-id="id1">Clickable</span>
-        <p data-pn-if="id1">some text to show</p>
-        [/html]
-        </p>
+        <div class="demo">
+            [html]
+            <span data-pn-id="id1">Clickable</span>
+            <p data-pn-if="id1">some text to show</p>
+            [/html]
+        </div>
         <p>
             With Pn you can make two kinds of elements, <b>clickable elements</b> and <b>showable elemets</b>.
         </p>
         <p>
-            A <b>clickable element</b> is defined by the attribute data-pn-id, data-pn-id is used to uniquely identify a clickable item, In the above example the clickable item is identified by "example". A clickable item keeps track of if it is "on" or "off" (true or false) . A items starts "off" and toggles when it is clicked. <span data-pn-id="naming-rules" data-pn-on-text="">(data-pn-id naming rules)</span><span data-pn-if="naming-rules">data-pn-id's can not include the character '(',')','!' or ' ' and can not be "and" or "or".</span>
+            A <b>clickable element</b> is defined by the attribute <code>data-pn-id</code>, <code>data-pn-id</code> is used to uniquely identify a clickable item, In the above example the clickable item is identified by "example". A clickable item keeps track of if it is "on" or "off" (true or false) . A items starts "off" and toggles when it is clicked. <span data-pn-id="naming-rules" data-pn-on-text="">(data-pn-id naming rules)</span><span data-pn-if="naming-rules"><code>data-pn-id</code>'s can not include the character '(',')','!' or ' ' and can not be "and" or "or".</span>
         </p>
         <p>
-            A <b>showable element</b> is identified by the attribute data-pn-if, data-pn-if contains a logical expression, When this expression evaluates to true the contents of the tag are shown. The expression consisting of logical operations and the identifiers of clickable elements. <span data-pn-id="example-pn-ifs" data-pn-on-text="">(examples)</span><span data-pn-if="example-pn-ifs"> For example data-pn-if could be "some-identifier" or "some-indentifer and another-indentifer" or "some-indentifer and (another-andentifer or third-identifier)" </span>The identifier for a clickable element is evaluated to true when its clickable element is on and evaluated to false otherwise.  In the example above, the showable element has the value example for it's data-pn-if this mean it will be shown when the clickable item with a data-pn-id of "example" (the span right above it) is on.
+            A <b>showable element</b> is identified by the attribute <code>data-pn-if</code>, <code>data-pn-if</code> contains a logical expression, When this expression evaluates to true the contents of the tag are shown. The expression consisting of logical operations and the identifiers of clickable elements. <span data-pn-id="example-pn-ifs" data-pn-on-text="">(examples)</span><span data-pn-if="example-pn-ifs"> For example <code>data-pn-if</code> could be "some-identifier" or "some-indentifer and another-indentifer" or "some-indentifer and (another-andentifer or third-identifier)."</span> The identifier for a clickable element is evaluated to true when its clickable element is on and evaluated to false otherwise.  In the example above, the showable element has the value example for it's <code>data-pn-if</code> this mean it will be shown when the clickable item with a <code>data-pn-id</code> of "example" (the span right above it) is on.
         </p>
-        <h2>CSS</h2>
-        I have included several CSS classes to allow users to style there pn elements.
-        <ul>
-            <li> <b>pn-id</b>: applied to all elements with the attribute data-pn-id</li>
-            <li> <b>pn-on</b>: applied to all elements with the attribute data-pn-id that are currently on.</li>
-            <li> <b>pn-off</b>:  applied to all elements with the attribute data-pn-id that are currently off.</li>
-            <li> <b>pn-if</b>: applied to all elements with the attribute data-pn-if.</li>
-            <li> <b>pn-shown</b>: applied to all elements with the attribute data-pn-if that are currently being shown.</li>
-            <li> <b>pn-hidden</b>: applied to all elements with the attribute data-pn-if that are currently being hidden.</li>
-        </ul>
+        <h2 data-pn-id="css" data-pn-start-on="true">CSS</h2>
+        <div data-pn-if="css">
+            I have included several CSS classes to allow users to style there pn elements.
+            <ul>
+                <li> <b>pn-id</b>: applied to all elements with the attribute data-pn-id</li>
+                <li> <b>pn-on</b>: applied to all elements with the attribute data-pn-id that are currently on.</li>
+                <li> <b>pn-off</b>:  applied to all elements with the attribute data-pn-id that are currently off.</li>
+                <li> <b>pn-if</b>: applied to all elements with the attribute data-pn-if.</li>
+                <li> <b>pn-shown</b>: applied to all elements with the attribute data-pn-if that are currently being shown.</li>
+                <li> <b>pn-hidden</b>: applied to all elements with the attribute data-pn-if that are currently being hidden.</li>
+            </ul>
+        </div>
         <h2 data-pn-id="example-2">
             data-pn-start-on
         </h2>
         <div data-pn-if="example-2">
-            <p>you can specify you want a clickable element to start "on" by adding the attribute data-pn-start-on="true"</p>
+            <p>You can specify you want a clickable element to start "on" by adding the attribute <code>data-pn-start-on="true"</code></p>
             <div class="demo">
                 <p data-pn-if="start-on">hit Control+shift+J to open developer tools</p>
                 <span data-pn-id="start-on" data-pn-start-on="true">hide help</span>
             </div>
-            [html]
-            <p data-pn-if="id2">hit Control+shift+J to open developer tools</p>
-            <span data-pn-id="id2" data-pn-start-on="true">hide help</span>
-            [/html]
+            <div class="demo">
+                [html]
+                <p data-pn-if="id2">hit Control+shift+J to open developer tools</p>
+                <span data-pn-id="id2" data-pn-start-on="true">hide help</span>
+                [/html]
+            </div>
         </div>
 
         <h2 data-pn-id="example-3">
             data-pn-on-text
         </h2>
         <div data-pn-if="example-3">
-            <p>The text to display in a clickable element while it is on. if this attribute is not defined the element will display the text it was imitated with (huh) when it is on.</p>
+            <p><code>data-pn-on-text</code> defines the text to display in a clickable element while it is on. if this attribute is not defined the element will display the text it was imitated with when it is on.</p>
             <div class="demo">
                 <span data-pn-id="on-text" data-pn-on-text="show less">show more</span>
                 <p data-pn-if="on-text">some text to show</p>
             </div>
-            [html]
-            <span data-pn-id="id3" data-pn-on-text="show less">show more</span>
-            <p data-pn-if="id3">some text to show</p>
-            [/html]
+            <div class="demo">
+                [html]
+                <span data-pn-id="id3" data-pn-on-text="show less">show more</span>
+                <p data-pn-if="id3">some text to show</p>
+                [/html]
+            </div>
         </div>
 
         <h2 data-pn-id="example-4">
             data-pn-off-text
         </h2>
         <div data-pn-if="example-4">
-            <p>The text to display in a clickable element while it is off. if this attribute is not defined the element will display the text it was imitated with (huh) when it is off.</p>
+            <p><code>data-pn-off-text</code> defines the text to display in a clickable element while it is off. if this attribute is not defined the element will display the text it was imitated with when it is off.</p>
             <div class="demo">
                 <p data-pn-if="off-text">hit Control+shift+J to open developer tools</p>
                 <span data-pn-id="off-text" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
             </div>
-            [html]
-            <p data-pn-if="id4">hit Control+shift+J to open developer tools</p>
-            <span data-pn-id="id4" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
-            [/html]
+            <div class="demo">
+                [html]
+                <p data-pn-if="id4">hit Control+shift+J to open developer tools</p>
+                <span data-pn-id="id4" data-pn-off-text="show" data-pn-start-on="true">hide help</span>
+                [/html]
+            </div>
         </div>
     </div>
 </body>

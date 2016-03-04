@@ -48,6 +48,15 @@ div.pn-shown , p.pn-shown, ul.pn-shown {
         opacity:0;
         background-color:yellow;
     }
+    60% {
+        max-height:400px;
+    }
+    70% {
+        max-height:800px;
+    }
+    80% {
+        max-height:1600px;
+    }
     100% {
         max-height:100%;
         opacity:1;
